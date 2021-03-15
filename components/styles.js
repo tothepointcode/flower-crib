@@ -31,22 +31,30 @@ export const InnerContainer = styled.View`
 `;
 export const PageLogo = styled.Image`
   width: 250px;
-  height: 250px;
+  height: 200px;
 `;
 
 export const PageTitle = styled.Text`
-  font-size: 35px;
+  font-size: 30px;
   text-align: center;
   font-weight: bold;
   color: ${Colors.brand};
   padding: 10px;
-  margin-bottom: 20px;
+`;
+
+export const SubTitle = styled.Text`
+    font-size: 18px;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    color: ${tertiary}
 `;
 
 export const StyledTextInput = styled.TextInput`
   background-color: ${secondary};
   padding: 15px;
   padding-left: 55px;
+  padding-right: 55px;
   border-radius: 5px;
   font-size: 16px;
   height: 60px;

@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { Formik } from 'formik';
 
 import {
-  StyledContainer,
   PageLogo,
   PageTitle,
+  SubTitle,
   StyledInputLabel,
   StyledFormArea,
   StyledButton,
@@ -38,6 +38,7 @@ const Login = () => {
     <InnerContainer>
       <PageLogo resizeMode="cover" source={require('./../assets/img/expo-bg1.png')} />
       <PageTitle>Flower Crib</PageTitle>
+      <SubTitle>Account Login</SubTitle>
 
       <Formik
         initialValues={{ email: '', password: '' }}
