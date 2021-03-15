@@ -29,7 +29,7 @@ import { TextInput, View, Text } from 'react-native';
 const { darkLight, brand, green, primary, tertiary } = Colors;
 
 // icon
-import { Octicons, Fontisto } from '@expo/vector-icons';
+import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons';
 
 const Login = () => {
   const [hidePassword, setHidePassword] = useState(true);
@@ -107,7 +107,7 @@ const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, .
             setHidePassword(!hidePassword);
           }}
         >
-          <Octicons name={hidePassword ? 'eye-closed' : 'eye'} size={30} color={darkLight} />
+          <Ionicons name={hidePassword ? 'md-eye-off' : 'md-eye'} size={30} color={darkLight} />
         </RightIcon>
       )}
     </View>

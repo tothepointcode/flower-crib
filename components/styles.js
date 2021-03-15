@@ -71,14 +71,14 @@ export const StyledInputLabel = styled.Text`
 
 export const LeftIcon = styled.View`
   left: 15px;
-  top: 34px;
+  top: 38px;
   position: absolute;
   z-index: 1;
 `;
 
 export const RightIcon = styled.TouchableOpacity`
   right: 15px;
-  top: 35px;
+  top: 38px;
   position: absolute;
   z-index: 1;
 `;
