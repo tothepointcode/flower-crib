@@ -33,68 +33,73 @@ const { darkLight, brand, primary } = Colors;
 // icon
 import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons';
 
+// keyboard avoiding view
+import KeyboardAvoidingWrapper from './../components/KeyboardAvoidingWrapper';
+
 const Login = () => {
   const [hidePassword, setHidePassword] = useState(true);
 
   return (
-    <StyledContainer>
-      <StatusBar style="dark" />
-      <InnerContainer>
-        <PageLogo resizeMode="cover" source={require('./../assets/img/expo-bg1.png')} />
-        <PageTitle>Flower Crib</PageTitle>
-        <SubTitle>Account Login</SubTitle>
+    <KeyboardAvoidingWrapper>
+      <StyledContainer>
+        <StatusBar style="dark" />
+        <InnerContainer>
+          <PageLogo resizeMode="cover" source={require('./../assets/img/expo-bg1.png')} />
+          <PageTitle>Flower Crib</PageTitle>
+          <SubTitle>Account Login</SubTitle>
 
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          onSubmit={(values) => {
-            console.log(values);
-          }}
-        >
-          {({ handleChange, handleBlur, handleSubmit, values }) => (
-            <StyledFormArea>
-              <MyTextInput
-                label="Email Address"
-                placeholder="andyj@gmail.com"
-                placeholderTextColor={darkLight}
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                keyboardType="email-address"
-                icon="mail"
-              />
-              <MyTextInput
-                label="Password"
-                placeholder="* * * * * * * *"
-                placeholderTextColor={darkLight}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
-                secureTextEntry={hidePassword}
-                icon="lock"
-                isPassword={true}
-                hidePassword={hidePassword}
-                setHidePassword={setHidePassword}
-              />
-              <MsgBox>...</MsgBox>
-              <StyledButton onPress={handleSubmit}>
-                <ButtonText>Login</ButtonText>
-              </StyledButton>
-              <Line />
-              <StyledButton google={true}>
-                <Fontisto name="google" size={25} color={primary} />
-                <ButtonText google={true}>Sign in with Google</ButtonText>
-              </StyledButton>
-              <ExtraView>
-                <ExtraText>Don't have an account already? </ExtraText>
-                <TextLink>
-                  <TextLinkContent>Signup</TextLinkContent>
-                </TextLink>
-              </ExtraView>
-            </StyledFormArea>
-          )}
-        </Formik>
-      </InnerContainer>
-    </StyledContainer>
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            onSubmit={(values) => {
+              console.log(values);
+            }}
+          >
+            {({ handleChange, handleBlur, handleSubmit, values }) => (
+              <StyledFormArea>
+                <MyTextInput
+                  label="Email Address"
+                  placeholder="andyj@gmail.com"
+                  placeholderTextColor={darkLight}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                  keyboardType="email-address"
+                  icon="mail"
+                />
+                <MyTextInput
+                  label="Password"
+                  placeholder="* * * * * * * *"
+                  placeholderTextColor={darkLight}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                  secureTextEntry={hidePassword}
+                  icon="lock"
+                  isPassword={true}
+                  hidePassword={hidePassword}
+                  setHidePassword={setHidePassword}
+                />
+                <MsgBox>...</MsgBox>
+                <StyledButton onPress={handleSubmit}>
+                  <ButtonText>Login</ButtonText>
+                </StyledButton>
+                <Line />
+                <StyledButton google={true}>
+                  <Fontisto name="google" size={25} color={primary} />
+                  <ButtonText google={true}>Sign in with Google</ButtonText>
+                </StyledButton>
+                <ExtraView>
+                  <ExtraText>Don't have an account already? </ExtraText>
+                  <TextLink>
+                    <TextLinkContent>Signup</TextLinkContent>
+                  </TextLink>
+                </ExtraView>
+              </StyledFormArea>
+            )}
+          </Formik>
+        </InnerContainer>
+      </StyledContainer>
+    </KeyboardAvoidingWrapper>
   );
 };
 
