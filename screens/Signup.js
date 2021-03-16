@@ -24,10 +24,10 @@ import {
   SubTitle,
   Colors,
 } from './../components/styles';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 //colors
-const { darkLight, brand } = Colors;
+const { darkLight, brand, primary } = Colors;
 
 // icon
 import { Octicons, Ionicons } from '@expo/vector-icons';
@@ -38,10 +38,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 // keyboard avoiding view
 import KeyboardAvoidingWrapper from './../components/KeyboardAvoidingWrapper';
 
+// api client
+import axios from 'axios';
+
 const Signup = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date(2000, 0, 1));
+  const [message, setMessage] = useState();
+  const [messageType, setMessageType] = useState();
 
   // Actual value to be sent
   const [dob, setDob] = useState();
@@ -55,6 +60,35 @@ const Signup = ({ navigation }) => {
 
   const showDatePicker = () => {
     setShow('date');
+  };
+
+  // Form handling
+  const handleSignup = (credentials, setSubmitting) => {
+    const url = 'https://whispering-headland-00232.herokuapp.com/user/signup';
+    axios
+      .post(url, credentials)
+      .then((response) => {
+        const result = response.data;
+        const { status, message, data } = result;
+
+        if (status !== 'SUCCESS') {
+          handleMessage(message, status);
+        } else {
+          handleMessage(message, status);
+          setTimeout(() => navigation.navigate('Welcome'), 1000);
+        }
+        setSubmitting(false);
+      })
+      .catch((error) => {
+        setSubmitting(false);
+        console.log(error.toJSON());
+      });
+  };
+
+  const handleMessage = (message, type = '') => {
+    setMessage(message);
+    setMessageType(type);
+    setTimeout(() => setMessage(null), 3000);
   };
 
   return (
@@ -79,22 +113,35 @@ const Signup = ({ navigation }) => {
           )}
 
           <Formik
-            initialValues={{ fullName: '', email: '', dateOfBirth: '', password: '', confirmPassword: '' }}
-            onSubmit={(values) => {
+            initialValues={{ name: '', email: '', dateOfBirth: '', password: '', confirmPassword: '' }}
+            onSubmit={(values, { setSubmitting }) => {
               values = { ...values, dateOfBirth: dob };
-              console.log(values);
-              navigation.navigate("Welcome");
+              if (
+                values.email == '' ||
+                values.password == '' ||
+                values.name == '' ||
+                values.dateOfBirth == '' ||
+                values.confirmPassword == ''
+              ) {
+                handleMessage('Please fill in all fields');
+                setSubmitting(false);
+              } else if (values.password !== values.confirmPassword) {
+                handleMessage('Passwords do not match');
+                setSubmitting(false);
+              } else {
+                handleSignup(values, setSubmitting);
+              }
             }}
           >
-            {({ handleChange, handleBlur, handleSubmit, values }) => (
+            {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
               <StyledFormArea>
                 <MyTextInput
                   label="Full Name"
                   placeholder="Richard Barnes"
                   placeholderTextColor={darkLight}
-                  onChangeText={handleChange('fullName')}
-                  onBlur={handleBlur('fullName')}
-                  value={values.fullName}
+                  onChangeText={handleChange('name')}
+                  onBlur={handleBlur('name')}
+                  value={values.name}
                   icon="person"
                 />
                 <MyTextInput
@@ -145,14 +192,23 @@ const Signup = ({ navigation }) => {
                   hidePassword={hidePassword}
                   setHidePassword={setHidePassword}
                 />
-                <MsgBox>...</MsgBox>
-                <StyledButton onPress={handleSubmit}>
-                  <ButtonText>Signup</ButtonText>
-                </StyledButton>
+                <MsgBox type={messageType}>{message}</MsgBox>
+
+                {!isSubmitting && (
+                  <StyledButton onPress={handleSubmit}>
+                    <ButtonText>Signup</ButtonText>
+                  </StyledButton>
+                )}
+                {isSubmitting && (
+                  <StyledButton disabled={true}>
+                    <ActivityIndicator size="large" color={primary} />
+                  </StyledButton>
+                )}
+
                 <Line />
                 <ExtraView>
                   <ExtraText>Already have an account? </ExtraText>
-                  <TextLink onPress={() => navigation.navigate("Login")}>
+                  <TextLink onPress={() => navigation.navigate('Login')}>
                     <TextLinkContent>Login</TextLinkContent>
                   </TextLink>
                 </ExtraView>

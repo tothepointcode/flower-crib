@@ -25,7 +25,7 @@ import {
   TextLinkContent,
   Colors,
 } from './../components/styles';
-import { View } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 
 //colors
 const { darkLight, brand, primary } = Colors;
@@ -36,8 +36,41 @@ import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons';
 // keyboard avoiding view
 import KeyboardAvoidingWrapper from './../components/KeyboardAvoidingWrapper';
 
+// api client
+import axios from 'axios';
+
 const Login = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
+  const [message, setMessage] = useState();
+  const [messageType, setMessageType] = useState();
+
+  const handleLogin = (credentials, setSubmitting) => {
+    const url = 'https://whispering-headland-00232.herokuapp.com/user/signin';
+    axios
+      .post(url, credentials)
+      .then((response) => {
+        const result = response.data;
+        const { status, message, data } = result;
+
+        if (status !== 'SUCCESS') {
+          handleMessage(message, status);
+        } else {
+          handleMessage(message, status);
+          setTimeout(() => navigation.navigate('Welcome', { ...data[0] }), 1000);
+        }
+        setSubmitting(false);
+      })
+      .catch((error) => {
+        setSubmitting(false);
+        console.log(error.toJSON());
+      });
+  };
+
+  const handleMessage = (message, type = '') => {
+    setMessage(message);
+    setMessageType(type);
+    setTimeout(() => setMessage(null), 3000);
+  };
 
   return (
     <KeyboardAvoidingWrapper>
@@ -50,12 +83,16 @@ const Login = ({ navigation }) => {
 
           <Formik
             initialValues={{ email: '', password: '' }}
-            onSubmit={(values) => {
-              console.log(values);
-              navigation.navigate('Welcome');
+            onSubmit={(values, { setSubmitting }) => {
+              if (values.email == '' || values.password == '') {
+                handleMessage('Please fill in all fields');
+                setSubmitting(false);
+              } else {
+                handleLogin(values, setSubmitting);
+              }
             }}
           >
-            {({ handleChange, handleBlur, handleSubmit, values }) => (
+            {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
               <StyledFormArea>
                 <MyTextInput
                   label="Email Address"
@@ -80,10 +117,19 @@ const Login = ({ navigation }) => {
                   hidePassword={hidePassword}
                   setHidePassword={setHidePassword}
                 />
-                <MsgBox>...</MsgBox>
-                <StyledButton onPress={handleSubmit}>
-                  <ButtonText>Login</ButtonText>
-                </StyledButton>
+                <MsgBox type={messageType}>{message}</MsgBox>
+
+                {!isSubmitting && (
+                  <StyledButton onPress={handleSubmit}>
+                    <ButtonText>Login</ButtonText>
+                  </StyledButton>
+                )}
+                {isSubmitting && (
+                  <StyledButton disabled={true}>
+                    <ActivityIndicator size="large" color={primary} />
+                  </StyledButton>
+                )}
+
                 <Line />
                 <StyledButton google={true}>
                   <Fontisto name="google" size={25} color={primary} />

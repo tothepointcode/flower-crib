@@ -12,10 +12,10 @@ import {
   WelcomeContainer,
   ButtonText,
   Line,
-  Colors,
 } from './../components/styles';
 
-const Welcome = () => {
+const Welcome = ({ navigation, route }) => {
+  const { name, email } = route.params;
   return (
     <>
       <StatusBar style="light" />
@@ -24,14 +24,18 @@ const Welcome = () => {
 
         <WelcomeContainer>
           <PageTitle welcome={true}>Welcome! Buddy</PageTitle>
-          <SubTitle welcome={true}>Olga Simpson</SubTitle>
-          <SubTitle welcome={true}>olgasimp@gmail.com</SubTitle>
+          <SubTitle welcome={true}>{name || 'Olga Simpson'}</SubTitle>
+          <SubTitle welcome={true}>{email || 'olgasimp@gmail.com'}</SubTitle>
 
           <StyledFormArea>
             <Avatar resizeMode="cover" source={require('./../assets/img/expo-bg1.png')} />
 
             <Line />
-            <StyledButton onPress={() => {}}>
+            <StyledButton
+              onPress={() => {
+                navigation.navigate('Login');
+              }}
+            >
               <ButtonText>Logout</ButtonText>
             </StyledButton>
           </StyledFormArea>
