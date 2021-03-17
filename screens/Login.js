@@ -49,7 +49,6 @@ const Login = ({ navigation }) => {
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
 
   const handleLogin = (credentials, setSubmitting) => {
-    handleMessage(null);
     const url = 'https://whispering-headland-00232.herokuapp.com/user/signin';
     axios
       .post(url, credentials)
@@ -60,7 +59,8 @@ const Login = ({ navigation }) => {
         if (status !== 'SUCCESS') {
           handleMessage(message, status);
         } else {
-          navigation.navigate('Welcome', { ...data[0] });
+          handleMessage(message, status);
+          setTimeout(() => navigation.navigate('Welcome', { ...data[0] }), 1000);
         }
         setSubmitting(false);
       })
@@ -74,6 +74,34 @@ const Login = ({ navigation }) => {
   const handleMessage = (message, type = '') => {
     setMessage(message);
     setMessageType(type);
+    setTimeout(() => setMessage(null), 4000);
+  };
+
+  const handleGoogleSignin = () => {
+    setGoogleSubmitting(true);
+    const config = {
+      iosClientId: `782607156495-2de6ecovh62rsu1ec5cduv9li7g33ki3.apps.googleusercontent.com`,
+      androidClientId: `782607156495-t08mgso56tjsp7und7lf81b2bmis239f.apps.googleusercontent.com`,
+      scopes: ['profile', 'email'],
+    };
+
+    Google.logInAsync(config)
+      .then((result) => {
+        const { type, user } = result;
+        if (type == 'success') {
+          const { email, name, photoUrl } = user;
+          handleMessage('Google signin successful', 'SUCCESS');
+          setTimeout(() => navigation.navigate('Welcome', { email, name, photoUrl }), 1000);
+        } else {
+          handleMessage('Google Signin was cancelled');
+        }
+        setGoogleSubmitting(false);
+      })
+      .catch((error) => {
+        handleMessage('An error occurred. Check your network and try again');
+        console.log(error);
+        setGoogleSubmitting(false);
+      });
   };
 
   return (
