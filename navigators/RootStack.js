@@ -15,35 +15,45 @@ import Welcome from './../screens/Welcome';
 
 const Stack = createStackNavigator();
 
-const RootStack = ({storedCredentials}) => {
+// credentials context
+import { CredentialsContext } from './../components/CredentialsContext';
+
+const RootStack = () => {
   return (
-    <NavigationContainer style={{ backgroundColor: 'red' }}>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: 'transparent',
-          },
-          headerTintColor: tertiary,
-          headerTransparent: true,
-          headerTitle: '',
-          headerLeftContainerStyle: {
-            paddingLeft: 20,
-          },
-        }}
-        initialRouteName="Login"
-      >
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen
-          options={{
-            headerTintColor: primary,
-          }}
-          name="Welcome"
-          component={Welcome}
-          initialParams={{ storedCredentials }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <CredentialsContext.Consumer>
+      {({ storedCredentials }) => (
+        <NavigationContainer style={{ backgroundColor: 'red' }}>
+          <Stack.Navigator
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: 'transparent',
+              },
+              headerTintColor: tertiary,
+              headerTransparent: true,
+              headerTitle: '',
+              headerLeftContainerStyle: {
+                paddingLeft: 20,
+              },
+            }}
+          >
+            {storedCredentials ? (
+              <Stack.Screen
+                options={{
+                  headerTintColor: primary,
+                }}
+                name="Welcome"
+                component={Welcome}
+              />
+            ) : (
+              <>
+                <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="Signup" component={Signup} />
+              </>
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      )}
+    </CredentialsContext.Consumer>
   );
 };
 

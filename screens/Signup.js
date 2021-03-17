@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 // formik
@@ -44,6 +44,9 @@ import axios from 'axios';
 // Async storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// credentials context
+import { CredentialsContext } from './../components/CredentialsContext';
+
 const Signup = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [show, setShow] = useState(false);
@@ -65,6 +68,9 @@ const Signup = ({ navigation }) => {
     setShow('date');
   };
 
+    // credentials context
+    const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+
   // Form handling
   const handleSignup = (credentials, setSubmitting) => {
     const url = 'https://whispering-headland-00232.herokuapp.com/user/signup';
@@ -77,8 +83,7 @@ const Signup = ({ navigation }) => {
         if (status !== 'SUCCESS') {
           handleMessage(message, status);
         } else {
-          handleMessage(message, status);
-          setTimeout(() => navigation.navigate('Welcome', { ...data }), 1000);
+          persistLogin({ ...data } ,message, status);
         }
         setSubmitting(false);
       })
@@ -97,12 +102,16 @@ const Signup = ({ navigation }) => {
 
   // Persisting login after signup
   const persistLogin = (credentials, message, status) => {
-    AsyncLogin.setItem('flowerCribCredentials', JSON.stringify(credentials))
+    AsyncStorage.setItem('flowerCribCredentials', JSON.stringify(credentials))
       .then(() => {
         handleMessage(message, status);
-        setTimeout(() => navigation.navigate('Welcome', credentials), 1000);
+        // setTimeout(() => navigation.navigate('Welcome', credentials), 1000);
+        setStoredCredentials(credentials);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        handleMessage('Persisting login failed');
+        console.log(error)
+      });
   };
 
   return (

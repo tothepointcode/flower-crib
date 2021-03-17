@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 // formik
@@ -45,11 +45,17 @@ import * as Google from 'expo-google-app-auth';
 // Async storage
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// credentials context
+import { CredentialsContext } from './../components/CredentialsContext';
+
 const Login = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState();
   const [messageType, setMessageType] = useState();
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
+
+  // credentials context
+  const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
 
   const handleLogin = (credentials, setSubmitting) => {
     const url = 'https://whispering-headland-00232.herokuapp.com/user/signin';
@@ -110,9 +116,13 @@ const Login = ({ navigation }) => {
     AsyncStorage.setItem('flowerCribCredentials', JSON.stringify(credentials))
       .then(() => {
         handleMessage(message, status);
-        setTimeout(() => navigation.navigate('Welcome', credentials), 1000);
+        // setTimeout(() => navigation.navigate('Welcome', credentials), 1000);
+        setStoredCredentials(credentials);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        handleMessage('Persisting login failed');
+        console.log(error);
+      });
   };
 
   return (
