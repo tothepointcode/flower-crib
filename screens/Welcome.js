@@ -16,6 +16,11 @@ import {
 
 const Welcome = ({ navigation, route }) => {
   const { name, email, photoUrl } = route.params;
+  const AvatarImg = photoUrl
+    ? {
+        uri: photoUrl,
+      }
+    : require('./../assets/img/expo-bg1.png');
   return (
     <>
       <StatusBar style="light" />
@@ -28,7 +33,7 @@ const Welcome = ({ navigation, route }) => {
           <SubTitle welcome={true}>{email || 'olgasimp@gmail.com'}</SubTitle>
 
           <StyledFormArea>
-            <Avatar resizeMode="cover" source={require('./../assets/img/expo-bg1.png')} />
+            <Avatar resizeMode="cover" source={AvatarImg} />
 
             <Line />
             <StyledButton
