@@ -45,6 +45,7 @@ const Login = ({ navigation }) => {
   const [messageType, setMessageType] = useState();
 
   const handleLogin = (credentials, setSubmitting) => {
+    handleMessage(null);
     const url = 'https://whispering-headland-00232.herokuapp.com/user/signin';
     axios
       .post(url, credentials)
@@ -55,8 +56,7 @@ const Login = ({ navigation }) => {
         if (status !== 'SUCCESS') {
           handleMessage(message, status);
         } else {
-          handleMessage(message, status);
-          setTimeout(() => navigation.navigate('Welcome', { ...data[0] }), 1000);
+          navigation.navigate('Welcome', { ...data[0] });
         }
         setSubmitting(false);
       })
@@ -70,7 +70,6 @@ const Login = ({ navigation }) => {
   const handleMessage = (message, type = '') => {
     setMessage(message);
     setMessageType(type);
-    setTimeout(() => setMessage(null), 3000);
   };
 
   return (

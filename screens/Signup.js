@@ -64,6 +64,7 @@ const Signup = ({ navigation }) => {
 
   // Form handling
   const handleSignup = (credentials, setSubmitting) => {
+    handleMessage(null);
     const url = 'https://whispering-headland-00232.herokuapp.com/user/signup';
     axios
       .post(url, credentials)
@@ -74,8 +75,7 @@ const Signup = ({ navigation }) => {
         if (status !== 'SUCCESS') {
           handleMessage(message, status);
         } else {
-          handleMessage(message, status);
-          setTimeout(() => navigation.navigate('Welcome', { ...data }), 1000);
+          navigation.navigate('Welcome', { ...data });
         }
         setSubmitting(false);
       })
@@ -89,7 +89,6 @@ const Signup = ({ navigation }) => {
   const handleMessage = (message, type = '') => {
     setMessage(message);
     setMessageType(type);
-    setTimeout(() => setMessage(null), 3000);
   };
 
   return (
