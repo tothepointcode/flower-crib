@@ -75,7 +75,7 @@ const Signup = ({ navigation }) => {
           handleMessage(message, status);
         } else {
           handleMessage(message, status);
-          setTimeout(() => navigation.navigate('Welcome'), 1000);
+          setTimeout(() => navigation.navigate('Welcome', { ...data }), 1000);
         }
         setSubmitting(false);
       })
