@@ -39,10 +39,14 @@ import KeyboardAvoidingWrapper from './../components/KeyboardAvoidingWrapper';
 // api client
 import axios from 'axios';
 
+// Google Signin
+import * as Google from 'expo-google-app-auth';
+
 const Login = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState();
   const [messageType, setMessageType] = useState();
+  const [googleSubmitting, setGoogleSubmitting] = useState(false);
 
   const handleLogin = (credentials, setSubmitting) => {
     const url = 'https://whispering-headland-00232.herokuapp.com/user/signin';
@@ -69,7 +73,34 @@ const Login = ({ navigation }) => {
   const handleMessage = (message, type = '') => {
     setMessage(message);
     setMessageType(type);
-    setTimeout(() => setMessage(null), 3000);
+    setTimeout(() => setMessage(null), 4000);
+  };
+
+  const handleGoogleSignin = () => {
+    setGoogleSubmitting(true);
+    const config = {
+      iosClientId: `782607156495-2de6ecovh62rsu1ec5cduv9li7g33ki3.apps.googleusercontent.com`,
+      androidClientId: `782607156495-t08mgso56tjsp7und7lf81b2bmis239f.apps.googleusercontent.com`,
+      scopes: ['profile', 'email'],
+    };
+
+    Google.logInAsync(config)
+      .then((result) => {
+        const { type, user } = result;
+        if (type == 'success') {
+          const { email, name, photoUrl } = user;
+          handleMessage('Google signin successful', 'SUCCESS');
+          setTimeout(() => navigation.navigate('Welcome', { email, name, photoUrl }), 1000);
+        } else {
+          handleMessage('Google Signin was cancelled');
+        }
+        setGoogleSubmitting(false);
+      })
+      .catch((error) => {
+        handleMessage('An error occurred. Check your network and try again');
+        console.log(error);
+        setGoogleSubmitting(false);
+      });
   };
 
   return (
@@ -131,10 +162,19 @@ const Login = ({ navigation }) => {
                 )}
 
                 <Line />
-                <StyledButton google={true}>
-                  <Fontisto name="google" size={25} color={primary} />
-                  <ButtonText google={true}>Sign in with Google</ButtonText>
-                </StyledButton>
+
+                {!googleSubmitting && (
+                  <StyledButton onPress={handleGoogleSignin} google={true}>
+                    <Fontisto name="google" size={25} color={primary} />
+                    <ButtonText google={true}>Sign in with Google</ButtonText>
+                  </StyledButton>
+                )}
+                {googleSubmitting && (
+                  <StyledButton disabled={true} google={true}>
+                    <ActivityIndicator size="large" color={primary} />
+                  </StyledButton>
+                )}
+
                 <ExtraView>
                   <ExtraText>Don't have an account already? </ExtraText>
                   <TextLink onPress={() => navigation.navigate('Signup')}>
