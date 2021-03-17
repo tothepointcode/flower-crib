@@ -28,6 +28,7 @@ const Welcome = ({ navigation, route }) => {
         <WelcomeImage resizeMode="cover" source={require('./../assets/img/expo-bg2.png')} />
 
         <WelcomeContainer>
+          <PageTitle>{`Cred here => ${route.params.storedCredentials}`}</PageTitle>
           <PageTitle welcome={true}>Welcome! Buddy</PageTitle>
           <SubTitle welcome={true}>{name || 'Olga Simpson'}</SubTitle>
           <SubTitle welcome={true}>{email || 'olgasimp@gmail.com'}</SubTitle>

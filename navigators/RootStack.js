@@ -15,7 +15,7 @@ import Welcome from './../screens/Welcome';
 
 const Stack = createStackNavigator();
 
-const RootStack = () => {
+const RootStack = ({storedCredentials}) => {
   return (
     <NavigationContainer style={{ backgroundColor: 'red' }}>
       <Stack.Navigator
@@ -40,6 +40,7 @@ const RootStack = () => {
           }}
           name="Welcome"
           component={Welcome}
+          initialParams={{ storedCredentials }}
         />
       </Stack.Navigator>
     </NavigationContainer>

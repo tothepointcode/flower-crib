@@ -42,6 +42,9 @@ import axios from 'axios';
 // Google Signin
 import * as Google from 'expo-google-app-auth';
 
+// Async storage
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Login = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState();
@@ -59,8 +62,7 @@ const Login = ({ navigation }) => {
         if (status !== 'SUCCESS') {
           handleMessage(message, status);
         } else {
-          handleMessage(message, status);
-          setTimeout(() => navigation.navigate('Welcome', { ...data[0] }), 1000);
+          persistLogin({ ...data[0] }, message, status);
         }
         setSubmitting(false);
       })
@@ -90,8 +92,7 @@ const Login = ({ navigation }) => {
         const { type, user } = result;
         if (type == 'success') {
           const { email, name, photoUrl } = user;
-          handleMessage('Google signin successful', 'SUCCESS');
-          setTimeout(() => navigation.navigate('Welcome', { email, name, photoUrl }), 1000);
+          persistLogin({ email, name, photoUrl }, 'Google signin successful', 'SUCCESS');
         } else {
           handleMessage('Google Signin was cancelled');
         }
@@ -102,6 +103,16 @@ const Login = ({ navigation }) => {
         console.log(error);
         setGoogleSubmitting(false);
       });
+  };
+
+  // Persisting login
+  const persistLogin = (credentials, message, status) => {
+    AsyncStorage.setItem('flowerCribCredentials', JSON.stringify(credentials))
+      .then(() => {
+        handleMessage(message, status);
+        setTimeout(() => navigation.navigate('Welcome', credentials), 1000);
+      })
+      .catch((error) => console.log(error));
   };
 
   return (

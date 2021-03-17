@@ -41,6 +41,9 @@ import KeyboardAvoidingWrapper from './../components/KeyboardAvoidingWrapper';
 // api client
 import axios from 'axios';
 
+// Async storage
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Signup = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [show, setShow] = useState(false);
@@ -90,6 +93,16 @@ const Signup = ({ navigation }) => {
     setMessage(message);
     setMessageType(type);
     setTimeout(() => setMessage(null), 3000);
+  };
+
+  // Persisting login after signup
+  const persistLogin = (credentials, message, status) => {
+    AsyncLogin.setItem('flowerCribCredentials', JSON.stringify(credentials))
+      .then(() => {
+        handleMessage(message, status);
+        setTimeout(() => navigation.navigate('Welcome', credentials), 1000);
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
