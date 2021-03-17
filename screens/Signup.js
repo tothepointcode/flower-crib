@@ -81,6 +81,7 @@ const Signup = ({ navigation }) => {
       })
       .catch((error) => {
         setSubmitting(false);
+        handleMessage('An error occurred. Check your network and try again');
         console.log(error.toJSON());
       });
   };
