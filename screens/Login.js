@@ -58,6 +58,7 @@ const Login = ({ navigation }) => {
   const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
 
   const handleLogin = (credentials, setSubmitting) => {
+    handleMessage(null);
     const url = 'https://whispering-headland-00232.herokuapp.com/user/signin';
     axios
       .post(url, credentials)
@@ -82,7 +83,6 @@ const Login = ({ navigation }) => {
   const handleMessage = (message, type = '') => {
     setMessage(message);
     setMessageType(type);
-    setTimeout(() => setMessage(null), 4000);
   };
 
   const handleGoogleSignin = () => {
