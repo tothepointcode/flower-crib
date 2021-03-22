@@ -21,9 +21,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from './../components/CredentialsContext';
 
 const Welcome = () => {
-
-  // const { name, email, photoUrl } = route.params.storedCredentials ? route.params.storedCredentials : route.params;
-
   // credentials context
   const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext);
 

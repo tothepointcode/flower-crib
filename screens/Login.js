@@ -116,7 +116,6 @@ const Login = ({ navigation }) => {
     AsyncStorage.setItem('flowerCribCredentials', JSON.stringify(credentials))
       .then(() => {
         handleMessage(message, status);
-        // setTimeout(() => navigation.navigate('Welcome', credentials), 1000);
         setStoredCredentials(credentials);
       })
       .catch((error) => {
