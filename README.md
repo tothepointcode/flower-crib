@@ -6,4 +6,4 @@ A full frontend login system mobile application which has been connected to a ho
 * [React Native]()
 
 ## Screenshots
-![Screenshots]()
+![Screenshots](assets/img/flower_crib_shots.png)
